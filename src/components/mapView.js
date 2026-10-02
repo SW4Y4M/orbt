@@ -23,18 +23,15 @@ export function ensureMap(container, center, zoom) {
       zoomControl: false, // we add a repositioned control below
       attributionControl: true,
     });
-    // Clean, muted basemap (CARTO Positron) — strips the clutter of default OSM
-    // tiles down to soft greys so pins and the route stand out. Free, no key;
-    // loaded by the browser at runtime like Leaflet itself.
-    L.tileLayer(
-      "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
-      {
-        maxZoom: 20,
-        subdomains: "abcd",
-        attribution:
-          '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> © <a href="https://carto.com/attributions">CARTO</a>',
-      }
-    ).addTo(map);
+    // Base tiles: standard OpenStreetMap — free, no API key, always available.
+    // We mute/lighten them with a CSS filter (see `.map .leaflet-tile-pane` in
+    // app.css) so the map stays clean and pins/route stand out, without
+    // depending on a keyed provider like CARTO.
+    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 19,
+      attribution:
+        '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    }).addTo(map);
     L.control.zoom({ position: "bottomright" }).addTo(map);
     map.attributionControl.setPrefix("");
     markerLayer = L.layerGroup().addTo(map);

@@ -315,6 +315,11 @@ body {
   width: 100%;
   height: 100%;
 }
+/* Mute the standard OSM tiles into a soft, clean basemap (no keyed provider
+   needed). Filter only the tiles — markers, route and popups stay full-colour. */
+.map .leaflet-tile-pane {
+  filter: grayscale(0.55) brightness(1.08) contrast(0.92) saturate(0.7);
+}
 .map__fallback {
   display: grid;
   place-items: center;
