@@ -1,25 +1,44 @@
 /* Orbit — clean, minimal, map-first UI.
-   Soft rounded cards floating over a light-blue sky, pill tabs, friendly type. */
+   Palette drawn from the brand logo: deep purple identity + light-yellow accent,
+   over a clean light map. */
 
 :root {
-  --bg: #eaf1ff;
-  --bg-grad-top: #dcebff;
+  /* light app background with a faint lilac tint */
+  --bg: #f3f0fb;
+  --bg-grad-top: #ece6fb;
   --surface: #ffffff;
-  --ink: #11203a;
-  --ink-soft: #5a6b86;
-  --ink-faint: #8a98ad;
-  --brand: #2b6cff;
-  --brand-ink: #1b4fd6;
-  --accent-save: #0e9f6e;
-  --line: #e7edf6;
-  --danger: #d64545;
+
+  /* ink */
+  --ink: #231a40;
+  --ink-soft: #6a6186;
+  --ink-faint: #9a93b2;
+
+  /* brand purple (from the logo) */
+  --brand: #6b4eff;
+  --brand-ink: #4e34d6;
+  --brand-deep: #2a1b5e;   /* space-purple for dark brand surfaces */
+  --brand-deep-2: #130a33;
+  --brand-soft: #efeaff;   /* pale purple fill for chips/active pills */
+
+  /* light-yellow accent */
+  --accent: #ffe17a;
+  --accent-strong: #ffd54a;
+  --accent-ink: #2a1b5e;   /* dark text that sits on yellow */
+  --accent-soft: #fff6d6;  /* pale yellow wash */
+
+  /* savings reuse the warm accent so "money saved" reads as the highlight */
+  --accent-save: #b8860b;  /* readable gold text on light surfaces */
+  --accent-save-bg: #fff6d6;
+
+  --line: #ece7f6;
+  --danger: #d64564;
   --radius: 20px;
   --radius-sm: 12px;
-  --shadow: 0 10px 30px rgba(23, 54, 120, 0.12);
-  --shadow-sm: 0 4px 14px rgba(23, 54, 120, 0.08);
+  --shadow: 0 10px 30px rgba(42, 27, 94, 0.14);
+  --shadow-sm: 0 4px 14px rgba(42, 27, 94, 0.10);
   --tag-unidays: #ff5a5f;
   --tag-sb: #6b4eff;
-  --tag-direct: #0e9f6e;
+  --tag-direct: #b8860b;
   --font: "Nunito", ui-rounded, "SF Pro Rounded", system-ui, -apple-system,
     "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
@@ -78,16 +97,34 @@ body {
   font-size: 18px;
   padding: 4px 6px;
 }
-.brand__mark { font-size: 20px; }
-.brand--lg { font-size: 26px; margin-bottom: 8px; }
-.brand--lg .brand__mark { font-size: 28px; }
+/* brand logo */
+.logo { display: inline-flex; align-items: center; }
+.logo svg { display: block; width: 100%; height: 100%; }
+.logo--badge {
+  border-radius: 22px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(42, 27, 94, 0.35);
+}
+.logo--lockup { gap: 8px; }
+.logo__mark {
+  display: inline-block;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 3px 10px rgba(42, 27, 94, 0.28);
+}
+.logo__word {
+  font-weight: 800;
+  font-size: 20px;
+  letter-spacing: -0.5px;
+  color: var(--brand-ink);
+}
 .topbar__meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .chip {
   font-size: 13px;
   font-weight: 700;
   padding: 6px 12px;
   border-radius: 999px;
-  background: #eaf0fb;
+  background: var(--brand-soft);
   color: var(--brand-ink);
 }
 .chip--muted { background: #f1f4f9; color: var(--ink-soft); }
@@ -105,10 +142,18 @@ body {
 
 /* ------------------------------------------------------------- onboarding -- */
 .onboard {
-  min-height: 80dvh;
+  min-height: 100dvh;
   display: grid;
   place-items: center;
   padding: 24px 16px;
+  /* branded space-purple backdrop with a soft radial glow + faint stars */
+  background:
+    radial-gradient(1200px 600px at 50% -10%, rgba(143, 107, 255, 0.45), transparent 60%),
+    radial-gradient(2px 2px at 20% 30%, rgba(255,255,255,0.7), transparent),
+    radial-gradient(1.5px 1.5px at 70% 20%, rgba(255,255,255,0.6), transparent),
+    radial-gradient(1.5px 1.5px at 80% 65%, rgba(255,255,255,0.5), transparent),
+    radial-gradient(2px 2px at 35% 75%, rgba(255,255,255,0.5), transparent),
+    linear-gradient(180deg, var(--brand-deep), var(--brand-deep-2));
 }
 .onboard__card {
   width: 100%;
@@ -118,6 +163,7 @@ body {
   padding: 28px 24px;
   box-shadow: var(--shadow);
 }
+.onboard__logo { display: flex; justify-content: center; margin-bottom: 14px; }
 .onboard__title { font-size: 26px; margin: 4px 0 6px; line-height: 1.2; }
 .onboard__sub { color: var(--ink-soft); margin: 0 0 22px; }
 .field { margin-bottom: 20px; }
@@ -134,7 +180,7 @@ body {
   padding: 12px 14px;
   border: 1.5px solid var(--line);
   border-radius: var(--radius-sm);
-  background: #fbfcff;
+  background: #faf8ff;
   color: var(--ink);
 }
 .field__input:focus { outline: 2px solid var(--brand); border-color: var(--brand); }
@@ -151,16 +197,24 @@ body {
   transition: transform 0.05s ease, background 0.15s ease;
 }
 .btn:active { transform: translateY(1px); }
-.btn--primary { background: var(--brand); color: #fff; }
-.btn--primary:hover { background: var(--brand-ink); }
+/* primary CTA uses the light-yellow accent with dark-purple ink for contrast */
+.btn--primary {
+  background: var(--accent);
+  color: var(--accent-ink);
+  box-shadow: 0 4px 14px rgba(255, 213, 74, 0.5);
+}
+.btn--primary:hover { background: var(--accent-strong); }
+/* secondary brand button (purple) for when we need a non-accent emphasis */
+.btn--brand { background: var(--brand); color: #fff; }
+.btn--brand:hover { background: var(--brand-ink); }
 .btn--block { width: 100%; padding: 14px; font-size: 16px; margin-top: 6px; }
 .btn--ghost {
-  background: #f3f6fc;
+  background: #f3f0fb;
   color: var(--ink-soft);
   border-color: transparent;
   text-decoration: none;
 }
-.btn--ghost:hover { background: #e8eefb; color: var(--ink); }
+.btn--ghost:hover { background: var(--brand-soft); color: var(--ink); }
 .btn--danger { color: var(--danger); }
 
 /* ------------------------------------------------------------------- home -- */
@@ -197,7 +251,7 @@ body {
 /* --------------------------------------------------------------- segmented -- */
 .segmented {
   display: inline-flex;
-  background: #eef2fa;
+  background: #ece6fb;
   border-radius: 999px;
   padding: 4px;
   gap: 2px;
@@ -310,7 +364,7 @@ body {
   pointer-events: auto;
   background: var(--surface);
   border-radius: 22px 22px 0 0;
-  box-shadow: 0 -8px 30px rgba(23, 54, 120, 0.16);
+  box-shadow: 0 -8px 30px rgba(42, 27, 94, 0.18);
   display: flex;
   flex-direction: column;
   max-height: 52dvh;
@@ -374,7 +428,7 @@ body {
   padding: 16px;
   box-shadow: var(--shadow-sm);
 }
-.card--active { border-color: var(--brand); box-shadow: 0 0 0 2px rgba(43, 108, 255, 0.2); }
+.card--active { border-color: var(--brand); box-shadow: 0 0 0 2px rgba(107, 78, 255, 0.22); }
 .card--clickable { cursor: pointer; }
 .card__top { display: flex; align-items: flex-start; gap: 12px; }
 .card__index {
@@ -398,8 +452,8 @@ body {
 
 /* ---------------------------------------------------------------- discount -- */
 .discount {
-  background: #f6f9ff;
-  border: 1px dashed #cdddff;
+  background: var(--accent-soft);
+  border: 1px dashed var(--accent-strong);
   border-radius: var(--radius-sm);
   padding: 10px 12px;
   margin: 2px 0 12px;
@@ -420,7 +474,7 @@ body {
 .discount__offer { font-weight: 800; color: var(--ink); }
 .discount__note { font-size: 13px; color: var(--ink-soft); margin: 6px 0; }
 .discount__foot { display: flex; flex-direction: column; gap: 2px; }
-.discount__link { font-weight: 800; color: var(--brand); text-decoration: none; font-size: 13px; }
+.discount__link { font-weight: 800; color: var(--brand-ink); text-decoration: none; font-size: 13px; }
 .discount__verify { font-size: 11px; color: var(--ink-faint); }
 
 /* ----------------------------------------------------------------- prompt -- */
@@ -441,7 +495,7 @@ body {
   display: flex;
   align-items: center;
   gap: 14px;
-  background: #fbfcff;
+  background: #faf8ff;
   border: 1.5px solid var(--line);
   border-radius: var(--radius-sm);
   padding: 16px;
@@ -484,14 +538,15 @@ body {
 .summary__lab { font-size: 12px; color: var(--ink-faint); font-weight: 700; }
 .summary__item--save .summary__lab { color: var(--accent-save); }
 
+.summary__item--save .summary__num { font-weight: 800; }
 .startstop {
   display: flex;
   align-items: center;
   gap: 12px;
   padding: 12px 16px;
-  background: #eef4ff;
+  background: var(--brand-soft);
   border-radius: var(--radius-sm);
-  border: 1px dashed #cdddff;
+  border: 1px dashed #cfc3ff;
 }
 .startstop__dot { font-size: 22px; }
 .startstop__sub { margin: 2px 0 0; font-size: 13px; color: var(--ink-soft); }
@@ -524,9 +579,9 @@ body {
   background: var(--brand);
   border: 2.5px solid #fff;
   border-radius: 50%;
-  box-shadow: 0 1px 4px rgba(23, 54, 120, 0.35);
+  box-shadow: 0 1px 4px rgba(42, 27, 94, 0.4);
 }
-.pin--offer span { background: var(--accent-save); }
+.pin--offer span { background: var(--accent-strong); border-color: #fff; }
 /* plan: numbered order badges */
 .pin--num span {
   display: grid;
@@ -538,7 +593,7 @@ body {
   border-radius: 50%;
   font-weight: 800;
   font-size: 14px;
-  box-shadow: 0 2px 8px rgba(23, 54, 120, 0.4);
+  box-shadow: 0 2px 8px rgba(42, 27, 94, 0.45);
 }
 
 /* clean Leaflet popups */
@@ -555,8 +610,8 @@ body {
   align-self: flex-start;
   font-size: 12px;
   font-weight: 800;
-  color: var(--accent-save);
-  background: #e7f7f0;
+  color: var(--accent-ink);
+  background: var(--accent);
   padding: 2px 8px;
   border-radius: 999px;
 }

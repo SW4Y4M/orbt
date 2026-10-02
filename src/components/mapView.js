@@ -94,9 +94,9 @@ export function setMarkers(items, opts = {}) {
 
   if (opts.numbered && latlngs.length > 1) {
     L.polyline(latlngs, {
-      color: "#2b6cff",
-      weight: 3,
-      opacity: 0.55,
+      color: "#6b4eff",
+      weight: 3.5,
+      opacity: 0.65,
       dashArray: "1 9",
       lineCap: "round",
     }).addTo(routeLayer);

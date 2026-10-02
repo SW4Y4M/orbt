@@ -1,5 +1,6 @@
 import { el, mount } from "../components/dom.js";
 import { budgetTierToggle } from "../components/budgetTierToggle.js";
+import { logoBadge, logoLockup } from "../components/logo.js";
 import { AREAS, getArea } from "../data/areas.js";
 import { getState, setState, resetAll } from "../state.js";
 import { navigate } from "../router.js";
@@ -31,10 +32,7 @@ function onboarding(root) {
     root,
     el("section", { class: "onboard" }, [
       el("div", { class: "onboard__card" }, [
-        el("div", { class: "brand brand--lg" }, [
-          el("span", { class: "brand__mark", text: "🛰️" }),
-          el("span", { class: "brand__name", text: "Orbit" }),
-        ]),
+        el("div", { class: "onboard__logo" }, [logoBadge(84)]),
         el("h1", { class: "onboard__title", text: "Settle into London, sorted." }),
         el("p", { class: "onboard__sub", text: "A couple of basics and you're set. No sign-up — everything stays on your device." }),
         el("div", { class: "field" }, [
@@ -100,12 +98,9 @@ export function header(area, tier) {
   return el("header", { class: "topbar" }, [
     el("button", {
       class: "brand",
-      "aria-label": "Home",
+      "aria-label": "Orbit — home",
       on: { click: () => navigate("home") },
-    }, [
-      el("span", { class: "brand__mark", text: "🛰️" }),
-      el("span", { class: "brand__name", text: "Orbit" }),
-    ]),
+    }, [logoLockup(26)]),
     el("div", { class: "topbar__meta" }, [
       el("span", { class: "chip", text: area ? area.name : "Set area" }),
       el("span", { class: "chip chip--muted", text: tierLabel(tier) }),
