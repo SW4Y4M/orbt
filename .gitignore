@@ -1,0 +1,7 @@
+# Dependency-free project — nothing to install. Keep the repo clean.
+node_modules/
+.DS_Store
+*.log
+.cache/
+.vscode/
+.idea/

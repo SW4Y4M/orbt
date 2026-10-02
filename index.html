@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#eaf1ff" />
+    <title>Orbit — settle into London</title>
+    <meta name="description" content="Orbit helps students new to London settle in fast, save money with student discounts, and make the most of the city — one simple day plan at a time." />
+
+    <!-- Leaflet from CDN: loaded by the browser at runtime (no build step). -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""
+    />
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+      crossorigin=""
+      defer
+    ></script>
+
+    <link rel="stylesheet" href="./styles/app.css" />
+  </head>
+  <body>
+    <div id="app" class="app"></div>
+    <noscript>Orbit needs JavaScript enabled to run.</noscript>
+    <script type="module" src="./src/main.js"></script>
+  </body>
+</html>
