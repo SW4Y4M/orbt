@@ -279,9 +279,13 @@ body {
   display: flex;
   gap: 8px;
   overflow-x: auto;
-  padding-bottom: 4px;
+  padding: 2px 2px 6px;
+  /* keep the last tab from being clipped flush against the edge while scrolling */
+  scroll-padding-inline: 14px;
+  -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
 }
+.tabs::after { content: ""; flex: 0 0 6px; }
 .tabs::-webkit-scrollbar { display: none; }
 .tab {
   flex: 0 0 auto;
@@ -354,14 +358,25 @@ body {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  max-width: 760px;
+  min-width: 0; /* allow the scrollable tabs row to shrink instead of clipping */
 }
 
-/* floating controls get a soft frosted backing so they read over the map */
-.overlay__controls .tabs { padding: 2px; }
-.overlay__controls .tab,
+/* floating controls read clearly over the map */
+.overlay__controls .tab { box-shadow: var(--shadow-sm); }
+
+/* budget toggle sits in its own solid white pill so it doesn't float bare on
+   the map; it only takes the width it needs (not full row) */
+.explore__tier {
+  display: flex;
+}
 .explore__tier .segmented {
+  background: var(--surface);
   box-shadow: var(--shadow-sm);
+  border: 1px solid var(--line);
+}
+.explore__tier .segmented__item.is-active {
+  background: var(--brand-soft);
+  color: var(--brand-ink);
 }
 
 /* ---------------------------------------------------------- floating panel -- */
@@ -640,7 +655,6 @@ body {
     right: 14px;
     padding: 0;
   }
-  .overlay__controls { max-width: 420px; }
   .panel {
     position: absolute;
     left: 14px;
