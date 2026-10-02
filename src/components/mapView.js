@@ -19,11 +19,24 @@ export function ensureMap(container, center, zoom) {
     return null;
   }
   if (!map) {
-    map = L.map(container, { zoomControl: true, attributionControl: true });
-    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      maxZoom: 19,
-      attribution: "© OpenStreetMap contributors",
-    }).addTo(map);
+    map = L.map(container, {
+      zoomControl: false, // we add a repositioned control below
+      attributionControl: true,
+    });
+    // Clean, muted basemap (CARTO Positron) — strips the clutter of default OSM
+    // tiles down to soft greys so pins and the route stand out. Free, no key;
+    // loaded by the browser at runtime like Leaflet itself.
+    L.tileLayer(
+      "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+      {
+        maxZoom: 20,
+        subdomains: "abcd",
+        attribution:
+          '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> © <a href="https://carto.com/attributions">CARTO</a>',
+      }
+    ).addTo(map);
+    L.control.zoom({ position: "bottomright" }).addTo(map);
+    map.attributionControl.setPrefix("");
     markerLayer = L.layerGroup().addTo(map);
     routeLayer = L.layerGroup().addTo(map);
   } else if (map.getContainer() !== container) {
@@ -51,22 +64,29 @@ export function setMarkers(items, opts = {}) {
 
   const latlngs = [];
   items.forEach(({ place, order }) => {
+    const hasOffer = !!place.discount;
     const icon = opts.numbered
       ? L.divIcon({
           className: "pin pin--num",
           html: `<span>${order}</span>`,
-          iconSize: [28, 28],
-          iconAnchor: [14, 14],
+          iconSize: [30, 30],
+          iconAnchor: [15, 15],
         })
       : L.divIcon({
-          className: "pin",
-          html: "<span>●</span>",
-          iconSize: [20, 20],
-          iconAnchor: [10, 10],
+          className: `pin pin--dot${hasOffer ? " pin--offer" : ""}`,
+          html: "<span></span>",
+          iconSize: [18, 18],
+          iconAnchor: [9, 9],
         });
     const m = L.marker([place.lat, place.lng], { icon }).addTo(markerLayer);
-    const offer = place.discount ? `<br><em>${place.discount.offer}</em>` : "";
-    m.bindPopup(`<strong>${place.name}</strong><br>${place.note}${offer}`);
+    const offer = place.discount
+      ? `<span class="popup__offer">${place.discount.offer}</span>`
+      : "";
+    m.bindPopup(
+      `<div class="popup"><strong class="popup__name">${place.name}</strong>` +
+        `<span class="popup__note">${place.note}</span>${offer}</div>`,
+      { closeButton: false, offset: [0, -4] }
+    );
     if (opts.onSelect) m.on("click", () => opts.onSelect(place.id));
     markersById[place.id] = m;
     latlngs.push([place.lat, place.lng]);
@@ -76,15 +96,21 @@ export function setMarkers(items, opts = {}) {
     L.polyline(latlngs, {
       color: "#2b6cff",
       weight: 3,
-      opacity: 0.6,
-      dashArray: "2 8",
+      opacity: 0.55,
+      dashArray: "1 9",
       lineCap: "round",
     }).addTo(routeLayer);
   }
 
   if (latlngs.length) {
     const bounds = L.latLngBounds(latlngs);
-    map.fitBounds(bounds.pad(0.25), { maxZoom: 15 });
+    // Pad the right/bottom a touch more so pins aren't hidden under the
+    // overlaid card panel.
+    map.fitBounds(bounds.pad(0.3), {
+      maxZoom: 15,
+      paddingTopLeft: [40, 90],
+      paddingBottomRight: [40, 160],
+    });
   }
 }
 

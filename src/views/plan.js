@@ -169,32 +169,42 @@ function renderPlanResult(root, area) {
     );
   }
 
+  const planBar = el("div", { class: "overlay__controls" }, [
+    el("div", { class: "planbar" }, [
+      el("div", {}, [
+        el("strong", { class: "planbar__title", text: "Your day plan" }),
+        el("span", { class: "planbar__sub", text: energyLine(s.energy) }),
+      ]),
+      el("button", {
+        class: "btn btn--primary btn--sm",
+        text: "Regenerate",
+        on: {
+          click: () => {
+            setState({ plan: null });
+            renderPlan(root);
+          },
+        },
+      }),
+    ]),
+    summaryWrap,
+  ]);
+
+  const panel = el("div", { class: "panel" }, [
+    el("button", {
+      class: "panel__grip",
+      "aria-label": "Toggle plan list",
+      on: { click: () => panel.classList.toggle("panel--collapsed") },
+    }),
+    el("div", { class: "panel__scroll" }, [listWrap, disclaimer()]),
+  ]);
+
   mount(
     root,
-    el("div", { class: "screen" }, [
-      header(area, s.tier),
-      el("div", { class: "plan" }, [
-        el("div", { class: "plan__bar" }, [
-          el("div", {}, [
-            el("h1", { class: "plan__title", text: "Your day plan" }),
-            el("p", { class: "plan__sub", text: energyLine(s.energy) }),
-          ]),
-          el("button", {
-            class: "btn btn--primary",
-            text: "Regenerate",
-            on: {
-              click: () => {
-                setState({ plan: null });
-                renderPlan(root);
-              },
-            },
-          }),
-        ]),
-        summaryWrap,
-        el("div", { class: "split" }, [
-          el("div", { class: "split__map" }, [mapEl]),
-          el("div", { class: "split__list" }, [listWrap, disclaimer()]),
-        ]),
+    el("div", { class: "mapscreen" }, [
+      mapEl,
+      el("div", { class: "overlay" }, [
+        el("div", { class: "overlay__top" }, [header(area, s.tier), planBar]),
+        panel,
       ]),
     ])
   );

@@ -93,16 +93,27 @@ export function renderExplore(root) {
     renderMap();
   }
 
+  // Full-screen map with floating overlays: controls pinned top, cards in a
+  // collapsible panel (bottom sheet on mobile, floating column on desktop).
+  const panel = el("div", { class: "panel" }, [
+    el("button", {
+      class: "panel__grip",
+      "aria-label": "Toggle list",
+      on: { click: () => panel.classList.toggle("panel--collapsed") },
+    }),
+    el("div", { class: "panel__scroll" }, [listWrap, disclaimer()]),
+  ]);
+
   mount(
     root,
-    el("div", { class: "screen" }, [
-      header(area, s.tier),
-      el("div", { class: "explore" }, [
-        el("div", { class: "explore__controls" }, [tabsWrap, tierWrap]),
-        el("div", { class: "split" }, [
-          el("div", { class: "split__map" }, [mapEl]),
-          el("div", { class: "split__list" }, [listWrap, disclaimer()]),
+    el("div", { class: "mapscreen" }, [
+      mapEl,
+      el("div", { class: "overlay" }, [
+        el("div", { class: "overlay__top" }, [
+          header(area, s.tier),
+          el("div", { class: "overlay__controls" }, [tabsWrap, tierWrap]),
         ]),
+        panel,
       ]),
     ])
   );
